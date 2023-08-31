@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.default-tab{
+    @apply py-3 px-3 text-base font-medium text-[#2A2A2A] text-center transition-all duration-300 cursor-pointer border-[1px] hover:border-[#2A2A2A] 
+}
+.active-tab{
+    @apply bg-[#2A2A2A] py-3 px-3 text-base font-medium text-white text-center transition-all duration-300 cursor-pointer border-[1px] border-[#2A2A2A]
+}

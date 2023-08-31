@@ -2,10 +2,12 @@ import { PiSlidersHorizontalBold } from 'react-icons/pi';
 import categories from './categoriesData';
 import Category from './Category';
 import { useEffect, useState } from 'react';
+import FiltersModal from '../../FiltersModal/FiltersModal';
 
 const Categories = () => {
     const [isSticky, setIsSticky] = useState(false);
     const [prevScrollPos, setPrevScrollPos] = useState(0);
+    const [openModal, setOpenModal] = useState(false)
 
     // catch the window scrolling and setSticky value
     useEffect(() => {
@@ -37,11 +39,15 @@ const Categories = () => {
                         key={item.label}
                     />
                 ))}
-                <div
+                <div onClick={() => setOpenModal(true)}
                     className='p-4 border-[1px] border-neutral-200 flex flex-row items-center gap-2 rounded-xl cursor-pointer'>
                     <PiSlidersHorizontalBold />
                     <p className="font-medium text-sm">Filters</p>
                 </div>
+                {/* this is the filters modal */}
+                {
+                    openModal && <FiltersModal setOpenModal={setOpenModal} />
+                }
             </div>
         </div>
     );
