@@ -42,7 +42,7 @@ const FiltersModal = ({ setOpenModal }) => {
 
     return (
         <div className="fixed top-0 left-0 right-0 z-50 w-full p-4 md:inset-0 h-screen flex justify-center items-center bg-gray-900 bg-opacity-70">
-            <div className="relative w-full max-w-3xl h-[calc(100vh-20%)] bg-white rounded-lg shadow overflow-hidden">
+            <div data-aos="fade-up" data-aos-duration="400" data-aos-easing="ease-in-out" className="relative w-full max-w-3xl h-[calc(100vh-20%)] bg-white rounded-lg shadow overflow-hidden">
                 <div className="relative h-full">
                     {/* modal header */}
                     <div className="p-4 border-b sticky top-0 left-0 bg-white">

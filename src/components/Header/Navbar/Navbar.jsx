@@ -3,7 +3,9 @@ import logo from "../../../assets/airbnb.svg"
 import { FaUserCircle } from 'react-icons/fa';
 import { BiSearch, BiGlobe } from 'react-icons/bi';
 import { AiOutlineMenu } from 'react-icons/ai';
+import { FiPlus, FiMinus } from "react-icons/fi";
 import { useEffect, useState } from "react";
+import DatePicker from "../../DatePicker/DatePicker";
 
 const Navbar = () => {
     const [open, setOpen] = useState(false)
@@ -45,16 +47,17 @@ const Navbar = () => {
                         />
                     </Link>
 
+
                     {/*search box */}
                     {openDetailNav ? <div>
-                        <ul className="flex gap-8 pt-3 pb-1">
-                            <li className="text-gray-800 hover:text-gray-500 cursor-pointer pb-2 border-b-2 border-gray-800 hover:border-gray-400">Stays</li>
-                            <li className="text-gray-800 hover:text-gray-500 cursor-pointer pb-2 hover:border-b-2 hover:border-gray-400">Experiences</li>
-                            <li className="text-gray-800 hover:text-gray-500 cursor-pointer pb-2 hover:border-b-2 hover:border-gray-400">Online Experiences</li>
+                        <ul data-aos="zoom-in" data-aos-delay="100" data-aos-duration="100" className="flex gap-8 pt-3 pb-1">
+                            <li className="text-gray-800 cursor-pointer pb-2 border-b-2 border-gray-800">Stays</li>
+                            <li className="text-gray-800 transition hover:text-gray-500 cursor-pointer pb-2 hover:border-b-2 hover:border-gray-400">Experiences</li>
+                            <li className="text-gray-800 transition hover:text-gray-500 cursor-pointer pb-2 hover:border-b-2 hover:border-gray-400">Online Experiences</li>
                         </ul>
 
-                        <div className="absolute left-0 right-0 top-[80px] flex justify-center bg-white pb-4">
-                            <div className={`w-[800px] rounded-full flex items-center justify-between overflow-hidden border ${openDetailNav ? "bg-gray-100" : "bg-white"}`}>
+                        <div data-aos="fade-down" data-aos-duration="200" data-aos-easing="ease-in-out" className="absolute left-0 right-0 top-[80px] flex justify-center bg-white pb-4">
+                            <div className={`relative w-[800px] rounded-full flex items-center justify-between border ${openDetailNav ? "bg-gray-100" : "bg-white"}`}>
 
                                 <div onClick={() => setDetailNavOption('Anywhere')} className={`w-1/3 flex flex-col px-5 py-3 rounded-full cursor-pointer ${detailNavOption === 'Anywhere' ? "bg-white shadow-xl" : "hover:bg-gray-200"}`}>
                                     <label htmlFor="place" className="font-medium text-sm">Where</label>
@@ -86,6 +89,75 @@ const Navbar = () => {
                                         <BiSearch size={20} />
                                     </div>
                                 </div>
+
+                                {/* dates selections */}
+                                {
+                                    detailNavOption === "Any Week" || detailNavOption === "Check in" || detailNavOption === "Check out" ? <div data-aos="zoom-in" data-aos-delay="200" data-aos-duration="100" className="bg-white rounded-xl absolute top-full left-0 mt-3 flex justify-center w-[800px] px-10 py-8 border">
+                                        <DatePicker />
+                                    </div> : ""
+                                }
+
+                                {/* adding guests */}
+                                {
+                                    detailNavOption === "Add guests" ? <div data-aos="zoom-in" data-aos-delay="200" data-aos-duration="100" style={{ boxShadow: "0px 1px 22px -6px rgba(0,0,0,0.25)" }} className='absolute top-full right-0 mt-3 rounded-xl w-[420px] p-5 border bg-white overflow-hidden text-sm'>
+
+                                        <div className='flex gap-5 flex-col cursor-pointer'>
+                                            <div className="flex justify-between items-center">
+                                                <div>
+                                                    <p className="font-semibold text-base mb-1">Adults</p>
+                                                    <p className="text-gray-600">Age 13 or above</p>
+                                                </div>
+                                                <div className="flex gap-5 items-center text-gray-600 hover:text-gray-800">
+                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiMinus /></span>
+                                                    <span>0</span>
+                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiPlus /></span>
+                                                </div>
+                                            </div>
+
+                                            <div className="w-full h-[1px] bg-gray-200"></div>
+
+                                            <div className="flex justify-between items-center">
+                                                <div>
+                                                    <p className="font-semibold text-base mb-1">Children</p>
+                                                    <p className="text-gray-600">Age 2-12</p>
+                                                </div>
+                                                <div className="flex gap-5 items-center text-gray-600 hover:text-gray-800">
+                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiMinus /></span>
+                                                    <span>0</span>
+                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiPlus /></span>
+                                                </div>
+                                            </div>
+
+                                            <div className="w-full h-[1px] bg-gray-200"></div>
+
+                                            <div className="flex justify-between items-center">
+                                                <div>
+                                                    <p className="font-semibold text-base mb-1">Infants</p>
+                                                    <p className="text-gray-600">Under 2</p>
+                                                </div>
+                                                <div className="flex gap-5 items-center text-gray-600 hover:text-gray-800">
+                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiMinus /></span>
+                                                    <span>0</span>
+                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiPlus /></span>
+                                                </div>
+                                            </div>
+
+                                            <div className="w-full h-[1px] bg-gray-200"></div>
+
+                                            <div className="flex justify-between items-center">
+                                                <div>
+                                                    <p className="font-semibold text-base mb-1">Pets</p>
+                                                    <p className="text-gray-600 underline">Bringing a service animal?</p>
+                                                </div>
+                                                <div className="flex gap-5 items-center text-gray-600 hover:text-gray-800">
+                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiMinus /></span>
+                                                    <span>0</span>
+                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiPlus /></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> : ""
+                                }
                             </div>
                         </div>
                     </div>
