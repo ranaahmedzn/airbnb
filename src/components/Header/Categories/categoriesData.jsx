@@ -6,9 +6,14 @@ import {
     GiIsland,
 } from 'react-icons/gi'
 import { FaSkiing, FaCity} from 'react-icons/fa'
+import { BiBed} from 'react-icons/bi'
 import { MdOutlineVilla } from 'react-icons/md'
 
 const categories = [
+    {
+        label: 'Rooms',
+        icon: BiBed,
+    },
     {
         label: 'Tropical',
         icon: GiIsland,
@@ -40,10 +45,6 @@ const categories = [
     {
         label: 'Modern',
         icon: MdOutlineVilla,
-    },
-    {
-        label: 'Pools',
-        icon: TbPool,
     },
     {
         label: 'Skiing',

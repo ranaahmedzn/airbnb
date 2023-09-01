@@ -6,10 +6,12 @@ import { AiOutlineMenu } from 'react-icons/ai';
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import DatePicker from "../../DatePicker/DatePicker";
+import ServiceAnimalModal from "../../ServiceAnimalModal/ServiceAnimalModal";
 
 const Navbar = () => {
-    const [open, setOpen] = useState(false)
+    const [openDropdown, setOpenDropdown] = useState(false)
     const [openDetailNav, setOpenDetailNav] = useState(false)
+    const [openAnimalModal, setOpenAnimalModal] = useState(false)
     const [detailNavOption, setDetailNavOption] = useState("")
     const [prevScrollPos, setPrevScrollPos] = useState(0)
 
@@ -26,6 +28,7 @@ const Navbar = () => {
 
         if (currentScrollPos > prevScrollPos) {
             setOpenDetailNav(false)
+            setOpenAnimalModal(false)
         }
     };
 
@@ -85,9 +88,11 @@ const Navbar = () => {
                                         <p className="font-medium">Who</p>
                                         <p className="text-gray-400">Add guests</p>
                                     </div>
-                                    <div className='p-3 bg-rose-500 rounded-full text-white'>
+
+                                    <button type="button" class="text-white bg-rose-500 hover:bg-rose-800 font-medium rounded-full text-sm p-3 text-center inline-flex gap-2 items-center">
                                         <BiSearch size={20} />
-                                    </div>
+                                        <span className={`transition ${detailNavOption === "Add guests" ? "block" : "hidden"}`}>Search</span>
+                                    </button>
                                 </div>
 
                                 {/* dates selections */}
@@ -147,7 +152,7 @@ const Navbar = () => {
                                             <div className="flex justify-between items-center">
                                                 <div>
                                                     <p className="font-semibold text-base mb-1">Pets</p>
-                                                    <p className="text-gray-600 underline">Bringing a service animal?</p>
+                                                    <p onClick={() => setOpenAnimalModal(true)} className="text-gray-600 hover:text-gray-800 underline">Bringing a service animal?</p>
                                                 </div>
                                                 <div className="flex gap-5 items-center text-gray-600 hover:text-gray-800">
                                                     <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiMinus /></span>
@@ -160,6 +165,9 @@ const Navbar = () => {
                                 }
                             </div>
                         </div>
+                        {
+                            openAnimalModal && <ServiceAnimalModal setOpenAnimalModal={setOpenAnimalModal} />
+                        }
                     </div>
                         : <div onClick={() => setOpenDetailNav(true)} className='border-[1px] w-full md:w-auto py-[7px] rounded-full shadow hover:shadow-md transition cursor-pointer'>
                             <div className='flex flex-row items-center justify-between'>
@@ -177,7 +185,6 @@ const Navbar = () => {
                         </div>
                     }
 
-
                     {/* this is the dropdown menu */}
                     <div className='relative'>
                         <div className='flex flex-row items-center gap-1'>
@@ -190,7 +197,7 @@ const Navbar = () => {
                             </div>
 
                             {/* Dropdown btn */}
-                            <div onClick={() => setOpen(!open)}
+                            <div onClick={() => setOpenDropdown(!openDropdown)}
                                 className='p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition'>
                                 <AiOutlineMenu />
                                 <div className='hidden md:block'>
@@ -198,7 +205,7 @@ const Navbar = () => {
                                 </div>
                             </div>
                         </div>
-                        {open && (
+                        {openDropdown && (
                             <div style={{ boxShadow: "0px 1px 22px -6px rgba(0,0,0,0.25)" }} className='absolute rounded-xl w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-14 text-sm'>
                                 <div className='flex flex-col cursor-pointer'>
                                     <Link to='/'
