@@ -89,7 +89,7 @@ const Navbar = () => {
                                         <p className="text-gray-400">Add guests</p>
                                     </div>
 
-                                    <button type="button" class="text-white bg-rose-500 hover:bg-rose-800 font-medium rounded-full text-sm p-3 text-center inline-flex gap-2 items-center">
+                                    <button type="button" className="text-white bg-rose-500 hover:bg-rose-800 font-medium rounded-full text-sm p-3 text-center inline-flex gap-2 items-center">
                                         <BiSearch size={20} />
                                         <span className={`transition ${detailNavOption === "Add guests" ? "block" : "hidden"}`}>Search</span>
                                     </button>

@@ -51,7 +51,7 @@ const categories = [
         icon: GiCaveEntrance,
     },
     {
-        label: 'Ski-in/out',
+        label: 'Skiing',
         icon: FaSkiing,
     },
 ]
