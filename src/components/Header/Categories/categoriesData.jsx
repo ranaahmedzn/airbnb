@@ -5,11 +5,15 @@ import {
     GiCaveEntrance,
     GiIsland,
 } from 'react-icons/gi'
-import { FaSkiing, FaCity} from 'react-icons/fa'
-import { BiBed} from 'react-icons/bi'
-import { MdOutlineVilla } from 'react-icons/md'
+import { FaSkiing, FaCity } from 'react-icons/fa'
+import { BiBed } from 'react-icons/bi'
+import { DiGhostSmall } from 'react-icons/di'
 
 const categories = [
+    {
+        label: 'All',
+        icon: DiGhostSmall,
+    },
     {
         label: 'Rooms',
         icon: BiBed,
@@ -17,6 +21,10 @@ const categories = [
     {
         label: 'Tropical',
         icon: GiIsland,
+    },
+    {
+        label: 'Countryside',
+        icon: TbMountain,
     },
     {
         label: 'Iconic Cities',
@@ -27,8 +35,8 @@ const categories = [
         icon: TbBeach,
     },
     {
-        label: 'Countryside',
-        icon: TbMountain,
+        label: 'Pools',
+        icon: TbPool,
     },
     {
         label: 'Castles',
@@ -43,11 +51,7 @@ const categories = [
         icon: GiCaveEntrance,
     },
     {
-        label: 'Modern',
-        icon: MdOutlineVilla,
-    },
-    {
-        label: 'Skiing',
+        label: 'Ski-in/out',
         icon: FaSkiing,
     },
 ]

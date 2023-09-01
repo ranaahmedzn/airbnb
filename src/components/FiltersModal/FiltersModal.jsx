@@ -5,7 +5,7 @@ import { PiWarehouse } from 'react-icons/pi';
 import RangeSlider from '../RangeSlider/RangeSlider';
 
 const FiltersModal = ({ setOpenModal }) => {
-    const [activeTab, setActiveTab] = useState('')
+    const [activeTab, setActiveTab] = useState('Any Type')
     const [minValue, setMinValue] = useState(50);
     const [maxValue, setMaxValue] = useState(1100);
     const [beds, setBeds] = useState(0)
@@ -59,9 +59,12 @@ const FiltersModal = ({ setOpenModal }) => {
                     {/* modal body */}
                     <div className="p-6 h-full overflow-y-auto">
                         {/* tab filter */}
-                        <div className='pt-6 pb-8 border-b-[1px]'>
-                            <h3 className='text-2xl font-semibold mb-5'>Type of Place</h3>
-                            <ul className="w-1/2 grid grid-cols-3 rounded-lg">
+                        <div className='pb-8 border-b-[1px]'>
+                            <div className="mb-5">
+                                <h3 className='text-2xl font-semibold'>Type of Place</h3>
+                                <p className='text-gray-600'>Search rooms, entire homes, or any type of place.</p>
+                            </div>
+                            <ul className="w-full px-8 grid grid-cols-3 rounded-lg">
                                 <li onClick={() => setActiveTab('Any Type')} className={`${activeTab === 'Any Type' ? 'active-tab' : 'default-tab'} rounded-l-lg`}>
                                     <p>Any Type</p><p className='text-sm'>$115 avg.</p>
                                 </li>
