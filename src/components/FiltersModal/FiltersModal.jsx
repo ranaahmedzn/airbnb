@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineHome } from 'react-icons/ai';
 import { BiSolidCity } from 'react-icons/bi';
 import { PiWarehouse } from 'react-icons/pi';
 import RangeSlider from '../RangeSlider/RangeSlider';
+import useRooms from '../../hooks/useRooms';
+import useAverage from '../../hooks/useAverage';
 
 const FiltersModal = ({ setOpenModal }) => {
-    const [activeTab, setActiveTab] = useState('Any Type')
+    const [activeTab, setActiveTab] = useState('All types');
     const [minValue, setMinValue] = useState(50);
     const [maxValue, setMaxValue] = useState(1100);
-    const [beds, setBeds] = useState(0)
-    const [propertyType, setPropertyType] = useState([])
-    const [bedrooms, setBedrooms] = useState(0)
+    const [beds, setBeds] = useState(0);
+    const [bedrooms, setBedrooms] = useState(0);
+    const [propertyType, setPropertyType] = useState([]);
+    const { rooms, setRooms, allCategoryRooms } = useRooms();
+    const [filteredRooms, setFilteredRooms] = useState([])
 
     const handlePropertyType = (value) => {
         if (propertyType.includes(value)) {
@@ -40,6 +44,36 @@ const FiltersModal = ({ setOpenModal }) => {
         }
     }
 
+    const handleClearAll = () => {
+        setActiveTab("All types")
+        setMinValue(50)
+        setMaxValue(1100)
+        setBeds(0)
+        setBedrooms(0)
+        setPropertyType([])
+        setRooms(allCategoryRooms)
+    }
+
+    const handleShowPlaces = () => {
+        if (filteredRooms.length) {
+            setRooms(filteredRooms)
+            setOpenModal(false)
+        }
+    }
+
+    const [allTypesAveragePrice, roomsAveragePrice, homesAveragePrice] = useAverage()
+
+
+    // fetch data based on the filters
+    useEffect(() => {
+        fetch(`https://airbnb-server-seven.vercel.app/rooms/filter?placeType=${activeTab}&priceRange=${[minValue, maxValue]}&beds=${beds}&bedrooms=${bedrooms}&propertyType=${propertyType}`)
+            .then(res => res.json())
+            .then(data => {
+                setFilteredRooms(data)
+                // console.log(data)
+            })
+    }, [activeTab, minValue, maxValue, beds, bedrooms, propertyType])
+
     return (
         <div className="fixed top-0 left-0 right-0 z-50 w-full p-4 md:inset-0 h-screen flex justify-center items-center bg-gray-900 bg-opacity-70">
             <div data-aos="fade-up" data-aos-duration="400" data-aos-easing="ease-in-out" className="relative w-full max-w-3xl h-[calc(100vh-20%)] bg-white rounded-lg shadow overflow-hidden">
@@ -65,18 +99,18 @@ const FiltersModal = ({ setOpenModal }) => {
                                 <p className='text-gray-600'>Search rooms, entire homes, or any type of place.</p>
                             </div>
                             <ul className="w-full px-8 grid grid-cols-3 rounded-lg">
-                                <li onClick={() => setActiveTab('Any Type')} className={`${activeTab === 'Any Type' ? 'active-tab' : 'default-tab'} rounded-l-lg`}>
-                                    <p>Any Type</p><p className='text-sm'>$115 avg.</p>
+                                <li onClick={() => setActiveTab('All types')} className={`${activeTab === 'All types' ? 'active-tab' : 'default-tab'} rounded-l-lg`}>
+                                    <p>All types</p><p className='text-sm'>${allTypesAveragePrice} avg.</p>
                                 </li>
 
-                                <li onClick={() => setActiveTab('Room')} className={`${activeTab === 'Room' ? 'active-tab' : 'default-tab'} border-x-[1px]`}>
-                                    <p>Room</p>
-                                    <p className='text-sm'>$64 avg.</p>
+                                <li onClick={() => setActiveTab('Rooms')} className={`${activeTab === 'Rooms' ? 'active-tab' : 'default-tab'} border-x-[1px]`}>
+                                    <p>Rooms</p>
+                                    <p className='text-sm'>${roomsAveragePrice} avg.</p>
                                 </li>
 
-                                <li onClick={() => setActiveTab('Entire Room')} className={`${activeTab === 'Entire Room' ? 'active-tab' : 'default-tab'} rounded-r-lg`}>
-                                    <p>Entire Room</p>
-                                    <p className='text-sm'>$133 avg.</p>
+                                <li onClick={() => setActiveTab('Home')} className={`${activeTab === 'Home' ? 'active-tab' : 'default-tab'} rounded-r-lg`}>
+                                    <p>Entire Homes</p>
+                                    <p className='text-sm'>${homesAveragePrice} avg.</p>
                                 </li>
                             </ul>
                         </div>
@@ -147,17 +181,17 @@ const FiltersModal = ({ setOpenModal }) => {
                         <div className='py-6 mb-[150px]'>
                             <h3 className='text-2xl font-semibold mb-5'>Property type</h3>
                             <div className='grid gap-4 grid-cols-4'>
-                                <div onClick={() => handlePropertyType('Home')} className={`property-type ${propertyType[0] === "Home" ? "ring-2 ring-[#2A2A2A]" : "hover:border-[#2A2A2A]"}`}>
+                                <div onClick={() => handlePropertyType('Home')} className={`property-type ${propertyType.includes("Home") ? "ring-2 ring-[#2A2A2A]" : "hover:border-[#2A2A2A]"}`}>
                                     <AiOutlineHome size={32} />
                                     <h3 className="text-lg font-semibold">Home</h3>
                                 </div>
 
-                                <div onClick={() => handlePropertyType('Apartment')} className={`property-type ${propertyType[1] === "Apartment" ? "ring-2 ring-[#2A2A2A]" : "hover:border-[#2A2A2A]"}`}>
+                                <div onClick={() => handlePropertyType('Apartment')} className={`property-type ${propertyType.includes("Apartment") ? "ring-2 ring-[#2A2A2A]" : "hover:border-[#2A2A2A]"}`}>
                                     <BiSolidCity size={32} />
                                     <h3 className="text-lg font-semibold">Apartment</h3>
                                 </div>
 
-                                <div onClick={() => handlePropertyType('GuestHouse')} className={`property-type ${propertyType[2] === "GuestHouse" ? "ring-2 ring-[#2A2A2A]" : "hover:border-[#2A2A2A]"}`}>
+                                <div onClick={() => handlePropertyType('Guesthouse')} className={`property-type ${propertyType.includes("Guesthouse") ? "ring-2 ring-[#2A2A2A]" : "hover:border-[#2A2A2A]"}`}>
                                     <PiWarehouse size={32} />
                                     <h3 className="text-lg font-semibold">GuestHouse</h3>
                                 </div>
@@ -167,10 +201,10 @@ const FiltersModal = ({ setOpenModal }) => {
 
                     {/* modal footer */}
                     <div className="p-4 border-t flex items-center justify-between sticky bottom-0 left-0 bg-white">
-                        <h3 className="font-semibold cursor-pointer underline text-gray-800 hover:text-gray-900">
+                        <button onClick={handleClearAll} className="font-semibold cursor-pointer underline text-gray-800 hover:text-gray-900">
                             Clear All
-                        </h3>
-                        <button type="button" className="text-white bg-[#2A2A2A] hover:bg-[#2A2A2A] font-medium rounded-lg px-7 py-3 mr-2 mb-2">Show 650 Places</button>
+                        </button>
+                        <button onClick={handleShowPlaces} type="button" className="text-white bg-[#2A2A2A] hover:bg-[#2A2A2A] font-medium rounded-lg px-7 py-3 mr-2 mb-2">Show {filteredRooms.length ? filteredRooms?.length : rooms?.length} Places</button>
                     </div>
                 </div>
             </div>

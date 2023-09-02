@@ -5,7 +5,7 @@ import { BiGlobe } from 'react-icons/bi';
 
 const Footer = () => {
     return (
-        <div className='bg-[#F7F7F7]'>
+        <div className='bg-[#F7F7F7] mt-10'>
             <div className='max-w-7xl mx-auto py-10'>
                 <h3 className='text-2xl font-semibold mb-5'>Inspiration for future getaways</h3>
                 <ul className='flex gap-6 text-gray-600 font-medium border-b-[1px]'>

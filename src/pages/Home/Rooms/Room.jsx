@@ -1,7 +1,10 @@
 import { AiFillHeart, AiOutlineHeart, AiFillStar } from "react-icons/ai";
 
-const Room = ({room}) => {
+const Room = ({room, displayTotalPrice}) => {
     const {location, image, category, dateRange, price, rating} = room || {};
+
+    //TODO: calculate total price based on the dateRange
+    const totalPrice = price * 5;
 
     return (
         <div className='flex flex-col w-full'>
@@ -29,7 +32,7 @@ const Room = ({room}) => {
                 5 nights . Aug 20 - 25
             </p>
             <div className='flex flex-row items-center gap-1 mt-2'>
-                <div className='font-semibold'>${price}</div>
+                <div className='font-semibold'>${displayTotalPrice ? totalPrice : price}</div>
                 <div className='font-light'>night</div>
             </div>
         </div>

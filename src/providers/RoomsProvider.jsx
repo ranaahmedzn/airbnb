@@ -7,7 +7,7 @@ const RoomsProvider = ({ children }) => {
     const [allCategoryRooms, setAllCategoryRooms] = useState([])
 
     useEffect(() => {
-        fetch('http://localhost:5000/rooms')
+        fetch('https://airbnb-server-seven.vercel.app/rooms')
             .then(res => res.json())
             .then(data => {
                 setRooms(data)
