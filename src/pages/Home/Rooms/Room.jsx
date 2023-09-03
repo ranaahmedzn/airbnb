@@ -1,10 +1,23 @@
+import { format, parse } from "date-fns";
 import { AiFillHeart, AiOutlineHeart, AiFillStar } from "react-icons/ai";
 
 const Room = ({room, displayTotalPrice}) => {
     const {location, image, category, dateRange, price, rating} = room || {};
 
-    //TODO: calculate total price based on the dateRange
-    const totalPrice = price * 5;
+    let startDate = dateRange.split(' - ')[0]
+    let endDate = dateRange.split(' - ')[1]
+    
+    startDate = parse(startDate, 'MMM d, yyyy', new Date())
+    endDate = parse(endDate, 'MMM d, yyyy', new Date())
+
+    const difTime = startDate.getTime() - endDate.getTime()
+    const difDays = difTime / (1000 * 3600 * 24)
+    const days = Math.abs(difDays)
+    const totalPrice = price * days;
+
+    startDate = format(startDate, 'MMM d')
+    endDate = format(endDate, 'd')
+
 
     return (
         <div className='flex flex-col w-full'>
@@ -29,11 +42,11 @@ const Room = ({room, displayTotalPrice}) => {
                 {category}
             </p>
             <p className='font-medium text-sm text-neutral-500'>
-                5 nights . Aug 20 - 25
+                {days} nights . {startDate} - {endDate}
             </p>
             <div className='flex flex-row items-center gap-1 mt-2'>
                 <div className='font-semibold'>${displayTotalPrice ? totalPrice : price}</div>
-                <div className='font-light'>night</div>
+                <div className='font-light'>{displayTotalPrice ? "total before taxes" : "night"}</div>
             </div>
         </div>
     );

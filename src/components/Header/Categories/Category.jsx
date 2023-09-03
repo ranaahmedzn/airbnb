@@ -3,17 +3,19 @@ import useRooms from "../../../hooks/useRooms";
 import { useEffect } from "react";
 
 const Category = ({ label, icon: Icon }) => {
-    const { setRooms, allCategoryRooms } = useRooms()
+    const { setRooms, allCategoryRooms, setShowSearchQuery } = useRooms()
     const location = useLocation();
     const category = new URLSearchParams(location.search).get('category');
 
     useEffect(() => {
         if (category === "All") {
             setRooms(allCategoryRooms)
+            setShowSearchQuery(false)
         }
         else {
             const specificCategoryRooms = allCategoryRooms?.filter(room => room.category === category);
             setRooms(specificCategoryRooms)
+            setShowSearchQuery(false)
         }
     }, [category])
     

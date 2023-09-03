@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../../assets/airbnb.svg"
-import { FaUserCircle } from 'react-icons/fa';
-import { BiSearch, BiGlobe } from 'react-icons/bi';
-import { AiOutlineMenu } from 'react-icons/ai';
+import { BiSearch } from 'react-icons/bi';
+import { HiOutlineXMark } from "react-icons/hi2";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import DatePicker from "../../DatePicker/DatePicker";
 import ServiceAnimalModal from "../../ServiceAnimalModal/ServiceAnimalModal";
+import useRooms from "../../../hooks/useRooms";
+import DropdownMenu from "../../DropdownMenu/DropdownMenu";
+import { format } from "date-fns";
 
 const Navbar = () => {
     const [openDropdown, setOpenDropdown] = useState(false)
@@ -14,6 +16,29 @@ const Navbar = () => {
     const [openAnimalModal, setOpenAnimalModal] = useState(false)
     const [detailNavOption, setDetailNavOption] = useState("")
     const [prevScrollPos, setPrevScrollPos] = useState(0)
+    const navigate = useNavigate()
+
+    const { setRooms, showSearchQuery, setShowSearchQuery} = useRooms();
+    const [searchLocation, setSearchLocation] = useState('')
+    const [adults, setAdults] = useState(0)
+    const [children, setChildren] = useState(0)
+    const [infants, setInfants] = useState(0)
+    const [pets, setPets] = useState(0)
+    let guests = adults + children;
+
+    const [dateChanged, setDateChanged] = useState(false)
+    const [date, setDate] = useState([{
+        startDate: new Date(),
+        endDate: new Date(),  //addDays(new Date(), 7)
+        key: 'selection'
+    }]);
+    const checkIn = format(date[0].startDate, 'MMM d, yyyy')
+    const checkOut = format(date[0].endDate, 'MMM d, yyyy')
+    const dateRange = `${checkIn} - ${checkOut}`
+
+
+    const startDate = format(date[0].startDate, 'MMM d')
+    const endDate = format(date[0].endDate, 'd')
 
     // catch the window scrolling and setOpenDetailNav value
     useEffect(() => {
@@ -32,6 +57,25 @@ const Navbar = () => {
         }
     };
 
+    const handleResetGuests = () => {
+        setAdults(0)
+        setChildren(0)
+        setInfants(0)
+        setPets(0)
+    }
+
+    const handleSearch = () => {
+        fetch(`http://localhost:5000/rooms/search?location=${searchLocation}&guests=${guests}&infants=${infants}&pets=${pets}&dateRange=${dateRange}`)
+            .then(res => res.json())
+            .then(data => {
+                setRooms(data)
+                setOpenDetailNav(false)
+                setShowSearchQuery(true)
+                navigate('/?search')
+                // console.log(data)
+            })
+    }
+
     return (
         <div>
             <nav className="py-4 px-4 border-b-[1px] relative">
@@ -42,7 +86,7 @@ const Navbar = () => {
                     {/* logo */}
                     <Link to='/'>
                         <img
-                            className='hidden md:block mr-[100px]'
+                            className='hidden md:block mr-[120px]'
                             src={logo}
                             alt='logo'
                             width='100'
@@ -62,9 +106,12 @@ const Navbar = () => {
                         <div data-aos="fade-down" data-aos-duration="200" data-aos-easing="ease-in-out" className="absolute left-0 right-0 top-[80px] flex justify-center bg-white pb-4">
                             <div className={`relative w-[800px] rounded-full flex items-center justify-between border ${openDetailNav ? "bg-gray-100" : "bg-white"}`}>
 
-                                <div onClick={() => setDetailNavOption('Anywhere')} className={`w-1/3 flex flex-col px-5 py-3 rounded-full cursor-pointer ${detailNavOption === 'Anywhere' ? "bg-white shadow-xl" : "hover:bg-gray-200"}`}>
+                                <div onClick={() => setDetailNavOption('Anywhere')} className={`relative w-1/3 flex flex-col px-5 py-3 rounded-full cursor-pointer ${detailNavOption === 'Anywhere' ? "bg-white shadow-xl" : "hover:bg-gray-200"}`}>
+
+                                {detailNavOption === 'Anywhere' && searchLocation ? <button onClick={() => setSearchLocation("")} className="absolute top-5 right-4 p-1 rounded-full bg-gray-200"><HiOutlineXMark /></button> : ""}
+
                                     <label htmlFor="place" className="font-medium text-sm">Where</label>
-                                    <input type="text" name="place" id="place" className="text-sm bg-transparent focus:outline-none" placeholder="Search destinations" />
+                                    <input onChange={(e) => setSearchLocation(e.target.value)} type="text" name="place" id="place" className="text-sm bg-transparent focus:outline-none" placeholder="Search destinations" value={searchLocation} />
                                 </div>
 
                                 <div className="h-8 w-[1px] bg-gray-300"></div>
@@ -84,12 +131,17 @@ const Navbar = () => {
                                 <div className="h-8 w-[1px] bg-gray-300"></div>
 
                                 <div onClick={() => setDetailNavOption('Add guests')} className={`flex w-1/3 items-center justify-between pl-5 pr-2 py-2.5 rounded-full cursor-pointer text-sm ${detailNavOption === 'Add guests' ? "bg-white shadow-xl" : "hover:bg-gray-200"}`}>
-                                    <div>
+                                    <div className={`relative ${detailNavOption === "Add guests" ? "w-3/5" : "w-4/5"}`}>
+
+                                        {detailNavOption === 'Add guests' && (guests || infants || pets) ? <button onClick={handleResetGuests} className="absolute -top-1.5 right-6 p-1.5 rounded-full bg-gray-200"><HiOutlineXMark /></button> : ""}
+
                                         <p className="font-medium">Who</p>
-                                        <p className="text-gray-400">Add guests</p>
+                                        <p className="text-gray-400 w-full truncate">
+                                            {guests ? <span className="text-gray-800 font-medium">{guests} guests, {infants ? `${infants} infants,` : ""} {pets ? `${pets} pets` : ""} { }</span> : "Add guests"}
+                                        </p>
                                     </div>
 
-                                    <button type="button" className="text-white bg-rose-500 hover:bg-rose-800 font-medium rounded-full text-sm p-3 text-center inline-flex gap-2 items-center">
+                                    <button onClick={handleSearch} type="button" className="text-white bg-rose-500 hover:bg-rose-800 font-medium rounded-full text-sm p-3 text-center inline-flex gap-2 items-center">
                                         <BiSearch size={20} />
                                         <span className={`transition ${detailNavOption === "Add guests" ? "block" : "hidden"}`}>Search</span>
                                     </button>
@@ -98,7 +150,7 @@ const Navbar = () => {
                                 {/* dates selections */}
                                 {
                                     detailNavOption === "Any Week" || detailNavOption === "Check in" || detailNavOption === "Check out" ? <div data-aos="zoom-in" data-aos-delay="200" data-aos-duration="100" className="bg-white rounded-xl absolute top-full left-0 mt-3 flex justify-center w-[800px] px-10 py-8 border">
-                                        <DatePicker />
+                                        <DatePicker date={date} setDate={setDate} dateChanged={dateChanged} setDateChanged={setDateChanged} />
                                     </div> : ""
                                 }
 
@@ -112,10 +164,12 @@ const Navbar = () => {
                                                     <p className="font-semibold text-base mb-1">Adults</p>
                                                     <p className="text-gray-600">Age 13 or above</p>
                                                 </div>
-                                                <div className="flex gap-5 items-center text-gray-600 hover:text-gray-800">
-                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiMinus /></span>
-                                                    <span>0</span>
-                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiPlus /></span>
+                                                <div className="flex gap-3 items-center text-gray-600 hover:text-gray-800">
+                                                    <button onClick={() => setAdults(adults - 1)} className="decrease-btn" disabled={adults === 0 && true}><FiMinus /></button>
+
+                                                    <span className="inline-block w-6 text-center font-medium">{adults}</span>
+
+                                                    <button onClick={() => setAdults(adults + 1)} className="increase-btn" disabled={adults === 10 && true}><FiPlus /></button>
                                                 </div>
                                             </div>
 
@@ -126,10 +180,12 @@ const Navbar = () => {
                                                     <p className="font-semibold text-base mb-1">Children</p>
                                                     <p className="text-gray-600">Age 2-12</p>
                                                 </div>
-                                                <div className="flex gap-5 items-center text-gray-600 hover:text-gray-800">
-                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiMinus /></span>
-                                                    <span>0</span>
-                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiPlus /></span>
+                                                <div className="flex gap-3 items-center text-gray-600 hover:text-gray-800">
+                                                    <button onClick={() => setChildren(children - 1)} className="decrease-btn" disabled={children === 0 && true}><FiMinus /></button>
+
+                                                    <span className="inline-block w-6 text-center font-medium">{children}</span>
+
+                                                    <button onClick={() => setChildren(children + 1)} className="increase-btn" disabled={children === 6 && true}><FiPlus /></button>
                                                 </div>
                                             </div>
 
@@ -140,10 +196,12 @@ const Navbar = () => {
                                                     <p className="font-semibold text-base mb-1">Infants</p>
                                                     <p className="text-gray-600">Under 2</p>
                                                 </div>
-                                                <div className="flex gap-5 items-center text-gray-600 hover:text-gray-800">
-                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiMinus /></span>
-                                                    <span>0</span>
-                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiPlus /></span>
+                                                <div className="flex gap-3 items-center text-gray-600 hover:text-gray-800">
+                                                    <button onClick={() => setInfants(infants - 1)} className="decrease-btn" disabled={infants === 0 && true}><FiMinus /></button>
+
+                                                    <span className="inline-block w-6 text-center font-medium">{infants}</span>
+
+                                                    <button onClick={() => setInfants(infants + 1)} className="increase-btn" disabled={infants === 5 && true}><FiPlus /></button>
                                                 </div>
                                             </div>
 
@@ -154,10 +212,12 @@ const Navbar = () => {
                                                     <p className="font-semibold text-base mb-1">Pets</p>
                                                     <p onClick={() => setOpenAnimalModal(true)} className="text-gray-600 hover:text-gray-800 underline">Bringing a service animal?</p>
                                                 </div>
-                                                <div className="flex gap-5 items-center text-gray-600 hover:text-gray-800">
-                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiMinus /></span>
-                                                    <span>0</span>
-                                                    <span className="border p-2 rounded-full border-gray-400 hover:border-gray-600"><FiPlus /></span>
+                                                <div className="flex gap-3 items-center text-gray-600 hover:text-gray-800">
+                                                    <button onClick={() => setPets(pets - 1)} className="decrease-btn" disabled={pets === 0 && true}><FiMinus /></button>
+
+                                                    <span className="inline-block w-6 text-center font-medium">{pets}</span>
+
+                                                    <button onClick={() => setPets(pets + 1)} className="increase-btn" disabled={pets === 5 && true}><FiPlus /></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -171,12 +231,12 @@ const Navbar = () => {
                     </div>
                         : <div onClick={() => setOpenDetailNav(true)} className='border-[1px] w-full md:w-auto py-[7px] rounded-full shadow hover:shadow-md transition cursor-pointer'>
                             <div className='flex flex-row items-center justify-between'>
-                                <div onClick={() => setDetailNavOption('Anywhere')} className='text-sm font-semibold px-5'>Anywhere</div>
+                                <div onClick={() => setDetailNavOption('Anywhere')} className='text-sm font-semibold px-5'>{showSearchQuery && searchLocation ? searchLocation : "Anywhere"}</div>
 
-                                <div onClick={() => setDetailNavOption('Any Week')} className='hidden sm:block text-sm font-semibold px-5 border-x-[1px] flex-1 text-center'>Any Week</div>
+                                <div onClick={() => setDetailNavOption('Any Week')} className='hidden sm:block text-sm font-semibold px-5 border-x-[1px] flex-1 text-center'>{showSearchQuery && dateChanged ?  `${startDate} - ${endDate}` : "Any Week"}</div>
 
                                 <div onClick={() => setDetailNavOption('Add guests')} className='text-sm pl-5 pr-2 text-gray-600 flex flex-row items-center gap-3'>
-                                    <div className='hidden sm:block'>Add Guests</div>
+                                    <div className='hidden sm:block'>{showSearchQuery ?  `${guests} guests` : "Add Guests"}</div>
                                     <div className='p-2 bg-rose-500 rounded-full text-white'>
                                         <BiSearch size={18} />
                                     </div>
@@ -185,56 +245,8 @@ const Navbar = () => {
                         </div>
                     }
 
-                    {/* this is the dropdown menu */}
-                    <div className='relative'>
-                        <div className='flex flex-row items-center gap-1'>
-                            <div className='hidden md:block text-sm font-semibold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer'>
-                                Airbnb your home
-                            </div>
-
-                            <div className='hidden md:block py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer'>
-                                <BiGlobe size={18} />
-                            </div>
-
-                            {/* Dropdown btn */}
-                            <div onClick={() => setOpenDropdown(!openDropdown)}
-                                className='p-4 md:py-1 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition'>
-                                <AiOutlineMenu />
-                                <div className='hidden md:block'>
-                                    <FaUserCircle size={30} className="text-gray-500" />
-                                </div>
-                            </div>
-                        </div>
-                        {openDropdown && (
-                            <div style={{ boxShadow: "0px 1px 22px -6px rgba(0,0,0,0.25)" }} className='absolute rounded-xl w-[40vw] md:w-3/4 bg-white overflow-hidden right-0 top-14 text-sm'>
-                                <div className='flex flex-col cursor-pointer'>
-                                    <Link to='/'
-                                        className='block md:hidden px-4 py-3 hover:bg-neutral-100 transition'>
-                                        Home
-                                    </Link>
-                                    <Link to='/signup'
-                                        className='px-4 py-3 hover:bg-neutral-100 transition font-medium'>
-                                        Sign Up
-                                    </Link>
-                                    <Link to='/login'
-                                        className='px-4 py-3 hover:bg-neutral-100 transition'>
-                                        Login
-                                    </Link>
-
-                                    <div className="w-full h-[1px] bg-gray-200"></div>
-
-                                    <Link to='/'
-                                        className='px-4 py-3 hover:bg-neutral-100 transition'>
-                                        Airbnb your home
-                                    </Link>
-                                    <Link to='/'
-                                        className='px-4 py-3 hover:bg-neutral-100 transition'>
-                                        Help Center
-                                    </Link>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    {/*this is the dropdown menu */}
+                    <DropdownMenu openDropdown={openDropdown} setOpenDropdown={setOpenDropdown} />
                 </div>
             </nav>
         </div>

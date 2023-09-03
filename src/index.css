@@ -17,3 +17,6 @@
 .active-bed, .active-bedroom{
     @apply bg-[#2A2A2A] text-white py-2 px-6 border rounded-full cursor-pointer        
 }
+.increase-btn, .decrease-btn{
+    @apply border p-2 rounded-full border-gray-400 hover:border-gray-600 disabled:cursor-not-allowed disabled:border-gray-200 disabled:text-gray-300
+}

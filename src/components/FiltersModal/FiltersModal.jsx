@@ -66,7 +66,7 @@ const FiltersModal = ({ setOpenModal }) => {
 
     // fetch data based on the filters
     useEffect(() => {
-        fetch(`https://airbnb-server-seven.vercel.app/rooms/filter?placeType=${activeTab}&priceRange=${[minValue, maxValue]}&beds=${beds}&bedrooms=${bedrooms}&propertyType=${propertyType}`)
+        fetch(`http://localhost:5000/rooms/filter?placeType=${activeTab}&priceRange=${[minValue, maxValue]}&beds=${beds}&bedrooms=${bedrooms}&propertyType=${propertyType}`)
             .then(res => res.json())
             .then(data => {
                 setFilteredRooms(data)
