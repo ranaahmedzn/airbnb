@@ -1,8 +1,8 @@
-# React + Vite
+## Airbnb by Rana Ahmed
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Overview:** This website closely emulates the Airbnb homepage, providing users with a user-friendly platform for discovering and exploring accommodation options, showcasing my ability to recreate complex web interfaces.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Live Site Link:** https://airbnb-byranaahmed.web.app/
+<br />
+**Server Repo Link:** https://github.com/ranaahmedzn/airbnb-server
