@@ -61,12 +61,13 @@ const FiltersModal = ({ setOpenModal }) => {
         }
     }
 
+    // get average price by using a custom hook
     const [allTypesAveragePrice, roomsAveragePrice, homesAveragePrice] = useAverage()
 
 
-    // fetch data based on the filters
+    // fetch data based on the filters options
     useEffect(() => {
-        fetch(`http://localhost:5000/rooms/filter?placeType=${activeTab}&priceRange=${[minValue, maxValue]}&beds=${beds}&bedrooms=${bedrooms}&propertyType=${propertyType}`)
+        fetch(`https://airbnb-server-seven.vercel.app/rooms/filter?placeType=${activeTab}&priceRange=${[minValue, maxValue]}&beds=${beds}&bedrooms=${bedrooms}&propertyType=${propertyType}`)
             .then(res => res.json())
             .then(data => {
                 setFilteredRooms(data)

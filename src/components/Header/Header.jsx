@@ -6,7 +6,7 @@ const Header = () => {
         <header className="sticky top-0 left-0 z-10 bg-white">
             {/* navbar*/}
             <Navbar />
-            
+
             {/* categories nav menu */}
             <Categories />
         </header>

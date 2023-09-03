@@ -1,11 +1,12 @@
 import { useState } from "react";
 import useRooms from "../../../hooks/useRooms";
 import Room from "./Room";
+import Loading from "../../../components/Loading/Loading";
 
 const Rooms = () => {
     const [displayTotalPrice, setDisplayTotalPrice] = useState(false)
     const [showMore, setShowMore] = useState(false)
-    const { rooms } = useRooms();
+    const { rooms, loading } = useRooms();
 
     return (
         <div className="max-w-7xl mx-auto ">
@@ -20,12 +21,15 @@ const Rooms = () => {
                 </label>
             </div>
 
-            <div className="pt-6 grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
-                {
-                    showMore ? rooms?.map((room, index) => <Room room={room} key={index} displayTotalPrice={displayTotalPrice} />)
-                    : rooms?.slice(0, 30).map((room, index) => <Room room={room} key={index} displayTotalPrice={displayTotalPrice} />)
-                }
-            </div>
+            {
+                loading ? <Loading /> :
+                    <div className="pt-6 grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
+                        {
+                            showMore ? rooms?.map((room, index) => <Room room={room} key={index} displayTotalPrice={displayTotalPrice} />)
+                                : rooms?.slice(0, 30).map((room, index) => <Room room={room} key={index} displayTotalPrice={displayTotalPrice} />)
+                        }
+                    </div>
+            }
 
             <div className={`text-center mt-14 ${showMore && "hidden"} ${rooms.length < 30 && "hidden"}`}>
                 <p className="text-lg font-semibold mb-4">Continue Exploring Rooms</p>

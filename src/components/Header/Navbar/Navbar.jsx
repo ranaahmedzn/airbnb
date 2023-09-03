@@ -18,7 +18,7 @@ const Navbar = () => {
     const [prevScrollPos, setPrevScrollPos] = useState(0)
     const navigate = useNavigate()
 
-    const { setRooms, showSearchQuery, setShowSearchQuery} = useRooms();
+    const { setRooms, showSearchQuery, setShowSearchQuery } = useRooms();
     const [searchLocation, setSearchLocation] = useState('')
     const [adults, setAdults] = useState(0)
     const [children, setChildren] = useState(0)
@@ -65,7 +65,7 @@ const Navbar = () => {
     }
 
     const handleSearch = () => {
-        fetch(`http://localhost:5000/rooms/search?location=${searchLocation}&guests=${guests}&infants=${infants}&pets=${pets}&dateRange=${dateRange}`)
+        fetch(`https://airbnb-server-seven.vercel.app/rooms/search?location=${searchLocation}&guests=${guests}&infants=${infants}&pets=${pets}&dateRange=${dateRange}`)
             .then(res => res.json())
             .then(data => {
                 setRooms(data)
@@ -108,7 +108,7 @@ const Navbar = () => {
 
                                 <div onClick={() => setDetailNavOption('Anywhere')} className={`relative w-1/3 flex flex-col px-5 py-3 rounded-full cursor-pointer ${detailNavOption === 'Anywhere' ? "bg-white shadow-xl" : "hover:bg-gray-200"}`}>
 
-                                {detailNavOption === 'Anywhere' && searchLocation ? <button onClick={() => setSearchLocation("")} className="absolute top-5 right-4 p-1 rounded-full bg-gray-200"><HiOutlineXMark /></button> : ""}
+                                    {detailNavOption === 'Anywhere' && searchLocation ? <button onClick={() => setSearchLocation("")} className="absolute top-5 right-4 p-1 rounded-full bg-gray-200"><HiOutlineXMark /></button> : ""}
 
                                     <label htmlFor="place" className="font-medium text-sm">Where</label>
                                     <input onChange={(e) => setSearchLocation(e.target.value)} type="text" name="place" id="place" className="text-sm bg-transparent focus:outline-none" placeholder="Search destinations" value={searchLocation} />
@@ -141,7 +141,7 @@ const Navbar = () => {
                                         </p>
                                     </div>
 
-                                    <button onClick={handleSearch} type="button" className="text-white bg-rose-500 hover:bg-rose-800 font-medium rounded-full text-sm p-3 text-center inline-flex gap-2 items-center">
+                                    <button onClick={handleSearch} type="button" className="text-white bg-rose-500 hover:bg-rose-600 font-medium rounded-full text-sm p-3 text-center inline-flex gap-2 items-center">
                                         <BiSearch size={20} />
                                         <span className={`transition ${detailNavOption === "Add guests" ? "block" : "hidden"}`}>Search</span>
                                     </button>
@@ -233,10 +233,10 @@ const Navbar = () => {
                             <div className='flex flex-row items-center justify-between'>
                                 <div onClick={() => setDetailNavOption('Anywhere')} className='text-sm font-semibold px-5'>{showSearchQuery && searchLocation ? searchLocation : "Anywhere"}</div>
 
-                                <div onClick={() => setDetailNavOption('Any Week')} className='hidden sm:block text-sm font-semibold px-5 border-x-[1px] flex-1 text-center'>{showSearchQuery && dateChanged ?  `${startDate} - ${endDate}` : "Any Week"}</div>
+                                <div onClick={() => setDetailNavOption('Any Week')} className='hidden sm:block text-sm font-semibold px-5 border-x-[1px] flex-1 text-center'>{showSearchQuery && dateChanged ? `${startDate} - ${endDate}` : "Any Week"}</div>
 
                                 <div onClick={() => setDetailNavOption('Add guests')} className='text-sm pl-5 pr-2 text-gray-600 flex flex-row items-center gap-3'>
-                                    <div className='hidden sm:block'>{showSearchQuery ?  `${guests} guests` : "Add Guests"}</div>
+                                    <div className='hidden sm:block'>{showSearchQuery ? `${guests} guests` : "Add Guests"}</div>
                                     <div className='p-2 bg-rose-500 rounded-full text-white'>
                                         <BiSearch size={18} />
                                     </div>
@@ -244,6 +244,7 @@ const Navbar = () => {
                             </div>
                         </div>
                     }
+
 
                     {/*this is the dropdown menu */}
                     <DropdownMenu openDropdown={openDropdown} setOpenDropdown={setOpenDropdown} />

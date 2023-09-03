@@ -44,6 +44,7 @@ const Categories = () => {
                     <PiSlidersHorizontalBold />
                     <p className="font-medium text-sm">Filters</p>
                 </div>
+                
                 {/* this is the filters modal */}
                 {
                     openModal && <FiltersModal setOpenModal={setOpenModal} />
